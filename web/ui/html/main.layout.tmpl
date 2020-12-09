@@ -1,0 +1,189 @@
+{{define "main"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>{{template "title" .}}</title>
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/static/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendors/jquery-tags-input/jquery.tagsinput.min.css">
+
+  <!-- sort-->
+  <link rel="stylesheet" type="text/css" href="/static/vendors/css/dataTables.bootstrap4.min.css"/>
+
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+
+  <link rel="shortcut icon" href="/static/img/favicon.png" />
+</head>
+
+<body class="sidebar-icon-only">
+  <div class="container-scroller">
+
+    <!-- chunk:chunks/_navbar.html -->
+    {{template "navbar" .}}
+    <!-- chunk -->
+
+    <div class="container-fluid page-body-wrapper">
+
+      <!-- chunk:chunks/_sidebar.html -->
+      {{template "sidebar" .}}
+      <!-- chunk -->
+
+      <div class="main-panel">
+
+        {{template "content" .}}
+        <!-- content-wrapper ends -->
+
+        <!-- chunk:chunks/_footer.html -->
+        {{template "footer" .}}
+        <!-- chunk -->
+        
+      </div>
+      <!-- main-panel ends -->
+
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="/static/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="/static/vendors/jquery.flot/jquery.flot.js"></script>
+  <script src="/static/vendors/jquery.flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/jquery.flot/jquery.flot.resize.js"></script>
+  <script src="/static/vendors/peity/jquery.peity.min.js"></script>
+  <script src="/static/js/jquery.flot.dashes.js"></script>
+  <script src="/static/vendors/jquery-tags-input/jquery.tagsinput.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="/static/js/off-canvas.js"></script>
+  <script src="/static/js/hoverable-collapse.js"></script>
+  <script src="/static/js/template.js"></script>
+  <script src="/static/js/settings.js"></script>
+  <script src="/static/js/todolist.js"></script>
+  <!-- endinject -->
+
+  <!-- Custom js for this page-->
+  <script src="/static/js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+
+  <!-- sort -->
+  <script type="text/javascript" src="/static/vendors/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('#sortTable').DataTable( {
+            "scrollY": '56vh',
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHosts').DataTable( {
+            "scrollY": '60vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHostApprove').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHostDelete').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableService').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+    <script>
+    $(document).ready(function() {
+        $('#sortTableTags').DataTable( {
+            "scrollY": '15vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableSysctl').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTablePkg').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableTpl').DataTable( {
+            "scrollY": '40vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true,
+            "order": [[ 1, "asc" ]]
+        } );
+    } );
+  </script>
+
+  <script>
+    window.onload = function () {
+      document.body.classList.add('loaded');
+    }
+  </script>
+
+</body>
+</html>
+{{end}}

@@ -1,0 +1,157 @@
+{{template "main" .}}
+{{define "title"}}Create Inventory Group{{end}}
+{{define "content"}}
+<div class="content-wrapper">  
+
+  <div class="dashboard-header d-flex flex-column grid-margin">
+    <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+      
+      <div class="d-flex align-items-center">
+        <h3 class="mb-0 font-weight-bold">
+          <a href="/groups"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> Create Inventory Group
+        </h3>
+
+        <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+          <i class="mdi mdi-chevron-right text-muted"></i>
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/groups">Inventory Groups</a>
+        </div>
+
+      </div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+
+    </div>
+  </div>
+
+  {{$role := .AuthenticatedUser.UserRole}}
+  {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+  <div class="row">
+    <div class="col-12">
+      <div class="card" style="border: 0;">
+        <div class="row">
+              <div class="col-lg-7">
+                <div class="card-body">
+                  <h4 class="card-title">Adding a new group</h4>
+                  <p class="card-description">Please provide information about the group</p>
+                  <form class="forms-sample" action="/groups/create" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+                  <div class="form-group row">
+                    <div class="col-md-6" style="margin-bottom: -10px;">
+                      <label for="Environment"><strong>Environment:</strong>
+                        {{if eq .Environment "prd"}}<span class="badge badge-prd text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "ppr"}}<span class="badge badge-ppr text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "edu"}}<span class="badge badge-edu text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "qa2"}}<span class="badge badge-qa2 text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "qa"}}<span class="badge badge-qa text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "dev2"}}<span class="badge badge-dev2 text-size-17">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "dev"}}<span class="badge badge-dev text-size-17">{{.Environment }}</span>{{end}}
+                      </label>
+                        <input class="form-control" type="hidden" name="environment" id="environment" value="{{.Environment}}" placeholder="{{.Environment}}" readonly>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-6">
+                      <label for="Environment"><strong>Parent group:*</strong></label>
+                      <select class="form-control" name="parent" id="parent">
+                      {{if .Form.Get "parent"}}
+                        <option selected>{{.Form.Get "parent"}}</option>
+                      {{end}}
+                      {{range $key, $value := .InventoryGroups}}
+                        <option value="{{$value.ID}}">
+                          {{$value.Value}}
+                        </option>
+                      {{end}}
+                      </select>
+                    </div>
+                  </div>
+                      
+                  <div class="form-group row">
+                    <div class="col-md-6">
+                      <label for="ServiceName"><strong>New group:*</strong></label>
+                      <input type="text" class="form-control" name="newgroup" id="newgroup" value="" placeholder="New Group">
+                      {{with .Form.Errors.Get "newgroup"}}
+                        <small class="text-danger">{{.}}</small>
+                      {{end}}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="Description"><strong>Description:</strong></label>
+                    <textarea class="form-control" name="description" id="description" rows="5"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary mr-2 text-white"><i class="mdi mdi-pencil-plus icon-sm"></i> Add Group</button>
+                  <a href="/groups" class="btn btn-light"><i class="mdi mdi-cancel icon-sm"></i> Cancel</a>
+                
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="card-body">
+                  <h4 class="card-title">Group vars:</h4>
+                  <p class="card-description">select the variable group</p>
+                  <div class="d-flex align-items-center">
+                    <a href="/groups/vars" class="btn btn-inverse-primary tx-12 btn-sm btn-rounded">
+                    <i class="mdi mdi-file-document-edit-outline icon-sm ajax-file-upload-filenametext-primary"></i>Edit vars</a>
+
+                    <a href="/groups/gvars" class="btn btn-inverse-success tx-12 btn-sm btn-rounded mx-3">
+                    <i class="mdi mdi-pen-plus icon-sm ajax-file-upload-filenametext-primary"></i>Add var</a>
+                  </div>
+
+                    <div class="well-check">
+                      <div class="table-sorter-wrapper col-lg-12 table-responsive var-check "> 
+                          {{if .InventoryGVars}}
+                          <table class="table table-sm" style="width:100%">
+                            <tbody>
+                                {{range .InventoryGVars}}
+                                <tr>
+                                  <td class="text-left">
+                                    <div class="form-check form-check-flat form-check-primary">
+                                      <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" name="gvars" value="{{.ID}} {{.Value}}">
+                                        {{.Name}}: {{.Value}}
+                                      </label> 
+                                    </div>
+                                  </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                          </table>
+                          {{else}}
+                            <p>There's nothing to see here... yet!</p>
+                          {{end}}
+                        </form>
+                      </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+    <div class="alert alert-danger" role="alert">
+      You don't have enough authority. Contact the DevOps Department.
+    </div>
+  {{end}}
+
+</div>
+{{end}}
+
+{{define "tree"}}
+  {{if .}}
+    {{ range $key, $value := .Nodes }} 
+      <li>    
+        <div class="form-check tree-check">
+          <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="check_groups" value="{{ $value.ID }} {{ $value.Value }}" disabled checked>{{ $value.Value }}
+          </label>
+        </div>
+        <ul>
+          {{ template "tree" . }}
+        </ul> 
+      </li>
+    {{end}}
+  {{end}}
+{{end}}

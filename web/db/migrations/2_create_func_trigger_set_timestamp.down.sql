@@ -1,0 +1,1 @@
+DROP TRIGGER set_timestamp ON server_hard_agent;

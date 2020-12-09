@@ -1,0 +1,92 @@
+{{template "main" .}}
+
+{{define "title"}}PortFWD+DNS+Services{{end}}
+
+{{define "content"}}
+<div class="content-wrapper">  
+
+  <div class="dashboard-header d-flex flex-column grid-margin">
+    <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+      <div class="d-flex align-items-center">
+        <h3 class="mb-0 font-weight-bold"><i class="mdi mdi-gamepad-variant icon-md text-info"></i> PortFWD+DNS+Services</h3>
+        <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+        </div>
+      </div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+    </div>
+  </div>
+
+  {{with .Notice}}
+    <div class="alert alert-success notice" role="alert">{{.}}</div>
+  {{end}}
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-xl-12 grid-margin stretch-card">
+      <div class="card" style="border: 0px;">
+        <div class="card-body_">
+
+                  <div class="d-md-flex align-items-center justify-content-between flex-wrap">
+                    <div class="d-flex mt-3 mt-lg-0">
+                      <a href="/stages" class="btn btn-outline-secondary">ALL</a>
+                      <a href="/stages?env=prd" class="btn btn-prd">PRD</a>
+                      <a href="/stages?env=ppr" class="btn btn-ppr">PPR</a>
+                      <a href="/stages?env=edu" class="btn btn-edu">EDU</a>
+                      <a href="/stages?env=qa2" class="btn btn-qa2">QA2</a>
+                      <a href="/stages?env=qa" class="btn btn-qa">QA</a>
+                      <a href="/stages?env=dev2" class="btn btn-dev2">DEV2</a>
+                      <a href="/stages?env=dev" class="btn btn-dev">DEV</a>
+                    </div>
+                  </div>
+
+          <div class="table-sorter-wrapper col-lg-12 table-responsive">
+            {{if .Stages}}
+            <!-- <table id="sortable-table-1" class="table table-bordered table-hover"> -->
+            <table id="sortTable" class="table table-striped table-bordered table-hover table-sm_ display" style="width:100%">
+              <thead class="thead-light">
+                <tr>
+                  <th>Env</th>
+                  <th>Type</th>
+                  <th>Technical name<i class="mdi mdi-chevron-down"></i></th>
+                  <th>Domain name<i class="mdi mdi-chevron-down"></i></th>
+                  <th>IP<i class="mdi mdi-chevron-down"></i></th>
+                  <th>Internal entrypoint<i class="mdi mdi-chevron-down"></i></th>
+                  <th>Placement<i class="mdi mdi-chevron-down"></i></th>
+                  <th>Team<i class="mdi mdi-chevron-down"></i></th>
+                  <th>Responsible<i class="mdi mdi-chevron-down"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .Stages}}
+                <tr {{if not .Approved}} class="table-warning"{{end}} {{if .Delete}} class="table-danger"{{end}}>
+                  <td>
+                    {{if eq .Host.Environment "prd"}}<span class="badge badge-prd">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "ppr"}}<span class="badge badge-ppr">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "edu"}}<span class="badge badge-edu">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "qa2"}}<span class="badge badge-qa2">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "qa"}}<span class="badge badge-qa">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "dev2"}}<span class="badge badge-dev2">{{.Host.Environment }}</span>{{end}}
+                    {{if eq .Host.Environment "dev"}}<span class="badge badge-dev">{{.Host.Environment }}</span>{{end}}
+                  </td>
+                  <td>{{.Type}}</td>
+                  <td><a href='/services/{{.ID}}' title="{{.Title}}">{{.TechName}}</a></td>
+                  <td><a href="http://{{.Domain}}">{{.Domain}}</a></td>
+                  <td><a href="http://{{.Host.IP}}:{{.Port}}">{{.Host.IP}}:{{.Port}}</a></td>
+                  <td><a href="http://{{.Value}}:{{.Port}}">{{.Value}}{{if .Value}}:{{.Port}}{{end}}</a></td>
+                  <td>{{.Placement}}</td>
+                  <td>{{.Team}}</td>
+                  <td>{{.Resp}}</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+            {{else}}
+                <p>There's nothing to see here... yet!</p>
+            {{end}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

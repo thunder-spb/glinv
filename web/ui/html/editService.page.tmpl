@@ -1,0 +1,243 @@
+{{template "main" .}}
+
+{{define "title"}}Edit Service{{end}}
+
+{{define "content"}}
+
+<div class="preloader">
+  <div class="preloader__row">
+    <div class="preloader__item"></div>
+    <div class="preloader__item"></div>
+  </div>
+</div>
+
+<div class="content-wrapper">
+  
+  <div class="dashboard-header d-flex flex-column grid-margin">  
+    <div class="d-flex align-items-center">
+      <h3 class="mb-0 font-weight-bold"><a href="/services"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> edit: {{.EditService.TechName}}</h3>
+
+      <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+        <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+        <i class="mdi mdi-chevron-right text-muted"></i>
+        <a class="text-muted mb-0 tx-13 cursor-pointer" href="/services">Inventory Services</a>
+      </div>
+
+    </div>
+    <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div> 
+  </div>
+
+  {{$role := .AuthenticatedUser.UserRole}}
+  {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+  <div class="row">
+    <div class="col-md-4 grid-margin grid-margin-md-0 stretch-card">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="table-sorter-wrapper col-lg-12 table-responsive">
+
+            <form class="forms-sample" action="/services/edit" method="POST">
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            <input type="hidden" name="id" value="{{.EditService.ID}}">
+
+            {{with .Form.Errors.Get "nodes"}}
+              <small class="text-danger">{{.}}</small>
+            {{end}}
+
+            {{$Hosts := .InventoryHosts}}
+            {{$editHosts := .EditHosts}}
+
+            {{if $Hosts}}
+            <table id="sortTableHosts" class="table table-striped table-hover table-sm display" style="width:100%">
+              <thead>
+                <tr>
+                    <th ></th> 
+                    <th class="sortStyle">Env<i class="mdi mdi-chevron-down"></i></th>
+                    <th class="sortStyle">Host<i class="mdi mdi-chevron-down"></i></th>
+                    <th class="sortStyle">IP<i class="mdi mdi-chevron-down"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{range $Host := $Hosts}}
+                  <tr>
+                    <td>
+                      <div class="form-check form-check-flat form-check-primary">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name="nodes" value="{{$Host.ID}}"
+                          {{range $editHost := $editHosts}}
+                            {{if eq $editHost.ID $Host.ID}}checked{{end}}
+                          {{end}}>
+                        </label> 
+                      </div>
+                    </td>
+                    <td class="text-left">
+                      <div class="form-check form-check-flat form-check-primary">
+                        {{if eq .Environment "prd"}}<span class="badge badge-prd">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "ppr"}}<span class="badge badge-ppr">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "edu"}}<span class="badge badge-edu">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "qa2"}}<span class="badge badge-qa2">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "qa"}}<span class="badge badge-qa">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "dev2"}}<span class="badge badge-dev2">{{.Environment }}</span>{{end}}
+                        {{if eq .Environment "dev"}}<span class="badge badge-dev">{{.Environment }}</span>{{end}}
+                      </div>
+                    </td>
+                    <td class="text-left">
+                      <div class="form-check form-check-flat form-check-primary">{{$Host.Hostname}}</div>
+                    </td>
+                    <td class="text-left">
+                      <div class="form-check form-check-flat form-check-primary">{{$Host.IP}}</div>
+                    </td>
+                  </tr>
+
+                  {{end}}
+              </tbody>
+            </table>
+            {{else}}
+              <p>There's nothing to see here... yet!</p>
+            {{end}}
+          </div>
+
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8 grid-margin grid-margin-md-0 stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <!--
+          <h4 class="card-title">Info</h4>
+          <p class="card-description">About Service or Module</p> -->
+
+            <div class="form-group row">
+              <div class="col-md-2">
+                <label for="Location" class="text-danger"><strong>Location:*</strong></label>
+                <select class="form-control" name="location" id="location">
+                  <option value="dc_ru_atlas_nsk" {{if eq .EditService.Location "dc_ru_atlas_nsk"}}selected{{end}}>dc_ru_atlas_nsk</option>
+                  <option value="dc_ru_dsc_msk" {{if eq .EditService.Location "dc_ru_dsc_msk"}}selected{{end}}>dc_ru_dsc_msk</option>
+                  <option value="dc_cn_alicloud_beijing" {{if eq .EditService.Location "dc_cn_alicloud_beijing"}}selected{{end}}>dc_cn_alicloud_beijing</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="Type" class="text-danger"><strong>Type:*</strong></label>
+                <select class="form-control" name="type" id="type">
+                  <option value="module" {{if eq .EditService.Type "module"}}selected{{end}}>module</option>
+                  <option value="service" {{if eq .EditService.Type "service"}}selected{{end}}>service</option>
+                </select>
+              </div>
+            </div>
+                
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label for="ServiceName"><strong>Title of the service / module:</strong> <small class="text-info"><a onclick="showSwal('custom-html')"><i class="mdi mdi-link-variant"></i> add link</a></small></label>
+                <input type="text" class="form-control" name="title" id="title" value="{{.EditService.Title}}">
+                {{with .Form.Errors.Get "title"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+              <div class="col-md-4">
+                <label for="TechName" class="text-danger"><strong>Technical name of the service / module:*</strong> <small class="text-info"><a onclick="showSwal('custom-html')"><i class="mdi mdi-link-variant"></i> add link</a></small></label>
+                <input type="text" class="form-control" name="techname" id="techname" value="{{.EditService.TechName}}">
+                {{with .Form.Errors.Get "techname"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label><strong>External entrypoint (Domain):</strong></label>
+                <input class="form-control" name="domain" id="domain" value="{{.EditService.Domain}}">
+                {{with .Form.Errors.Get "domain"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+              <div class="col-md-4">
+               <label><strong>Internal entrypoint (Value):</strong></label>
+                <input class="form-control" name="value" id="value" value="{{.EditService.Value}}">
+                {{with .Form.Errors.Get "value"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+              <div class="col-md-1">
+                <label class="text-danger"><strong>Port:*</strong></label>
+                <input class="form-control" name="port" id="port" value="{{.EditService.Port}}">
+                {{with .Form.Errors.Get "port"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-9">
+                <label for="Placement" class="text-danger"><strong>Placement:*</strong></label>
+                <input type="text" class="form-control" name="placement" id="placement" value="{{.EditService.Placement}}">
+                {{with .Form.Errors.Get "placement"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+            </div>
+
+             <div class="form-group row">
+              <div class="col-md-4">
+                <label for="Team"><strong>Team:</strong> </label>
+                <input type="text" class="form-control" name="team" id="team" value="{{.EditService.Team}}">
+                {{with .Form.Errors.Get "team"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+              <div class="col-md-4">
+                <label for="Resp"><strong>Responsible employee:</strong></label>
+                <input type="text" class="form-control" name="resp" id="resp" value="{{.EditService.Resp}}">
+                {{with .Form.Errors.Get "resp"}}
+                  <small class="text-danger">{{.}}</small>
+                {{end}}
+              </div>
+            </div>
+
+            <div class="card rounded mb-2 card-inverse-consul col-md-5">
+              <div class="card-body p-3">  
+
+                <div class="form-group row">
+                  <div class="col-md-5" style="padding-top: 36px;">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="reg_to_consul" value="true" {{if .EditService.RegToConsul}}checked{{end}}>
+                        Register in Consul ?
+                      <i class="input-helper"></i></label>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <label for="Node"><strong>Check method:*</strong></label>
+                    <select class="form-control" name="method_check_consul">
+                      <option value="tcp" {{if eq .EditService.MethodCheckConsul "tcp"}}selected{{end}}>TCP</option>
+                      <option value="http" {{if eq .EditService.MethodCheckConsul "http"}}selected{{end}}>HTTP</option>
+                      <option value="ttl" {{if eq .EditService.MethodCheckConsul "ttl"}}selected{{end}}>TTL</option>
+                      <option value="script" {{if eq .EditService.MethodCheckConsul "script"}}selected{{end}}>Script</option>
+                      <option value="docker" {{if eq .EditService.MethodCheckConsul "docker"}}selected{{end}}>Docker</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="Description"><strong>Description</strong></label>
+              <textarea class="form-control" name="description" id="description" rows="4">{{.EditService.Description.Value}}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary mr-2">Send changes to Approve</button>
+            <a href="/services/{{.EditService.ID}}" class="btn btn-light">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+    <div class="alert alert-danger" role="alert">
+      You don't have enough authority. Contact the DevOps Department.
+    </div>
+  {{end}}
+
+</div>
+{{end}}

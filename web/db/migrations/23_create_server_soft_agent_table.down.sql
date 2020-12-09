@@ -1,0 +1,1 @@
+DROP TABLE server_soft_agent;

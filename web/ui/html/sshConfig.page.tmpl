@@ -1,0 +1,30 @@
+{{template "main" .}}
+
+{{define "title"}}ssh config{{end}}
+
+{{define "content"}}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-5">
+                            <h2>API for<u class="ml-2">SSH Config</u></h2>
+                        </div>
+                        <div class="col-12 results">
+                            <div class="pt-4 border-bottom">
+                            <p class="d-block h4">Method "GET"</p>
+                            <a class="page-url text-primary" href="api/ssh/config" target="_blank">api/ssh/config</a>
+                            <p> </p>
+                            <p class="text-white bg-dark pl-1"> curl api/ssh/config -o $HOME/.ssh/config</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

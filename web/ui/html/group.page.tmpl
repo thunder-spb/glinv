@@ -1,0 +1,171 @@
+{{template "main" .}}
+{{define "title"}}Edit Group{{end}}
+{{define "content"}}
+
+<div class="content-wrapper">  
+  
+  <div class="dashboard-header d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+      <div class="d-flex align-items-center">
+        <h3 class="mb-0 font-weight-bold">
+          <a href="/groups"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> group: {{.EditGroup.Value}}
+        </h3>
+        <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+          <i class="mdi mdi-chevron-right text-muted"></i>
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/groups">Inventory Groups</a>
+        </div>
+      </div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+        {{$role := .AuthenticatedUser.UserRole}}
+        {{if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+        <form class=""action="/group/delete/{{.EditGroup.ID}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            {{if or (.SubGroups) (.InventoryHosts)}}
+            <span class="btn btn-outline-light btn-sm icon-btn ml-2 mb-2" title="Before deleting a group, you must delete its child element"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete group</span>
+            {{else}}
+            <button type="submit" class="btn btn-outline-danger btn-sm icon-btn ml-2 mb-2"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete group</button>
+            {{end}}
+        </form>
+        {{else}}
+        <span class="btn btn-outline-light btn-sm icon-btn ml-2 mb-2" title="You don't have enough permissions to delete it"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete group</span>
+        {{end}}
+      </div>   
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-12 grid-margin">
+      {{with .Notice}}
+      <div class="alert alert-success notice" role="alert">{{.}}</div>
+      {{end}}
+
+      {{if .SubGroups}}
+      <div class="alert alert-danger notice" role="alert"><i class="mdi mdi-information-outline"></i>Attention! Group: <strong>{{.EditGroup.Value}}</strong> contains subgroups. Before deleting a parent group, you must delete its subgroups.</div>
+      {{end}}
+
+
+      <div class="card">
+        <div class="card-body">
+
+          <form class="form-sample" action="/group/{{.EditGroup.ID}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            <div class="row">
+              <div class="col-md-3">
+              <h5>Edit Group:</h5>
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                    <input type="hidden" name="idGroup" value="{{.EditGroup.ID}}">
+                    <input type="text" class="form-control" name="valueGroup" value="{{.EditGroup.Value}}">
+                    
+                    {{with .Form.Errors.Get "valueGroup"}}
+                      <small class="text-danger ml-3 mb-1">{{.}}</small><br />
+                    {{end}}
+                  
+                    {{if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                    <button type="submit" class="btn btn-primary btn-sm mr-2" style="margin-top: 20px;"><i class="mdi mdi-content-save-edit-outline icon-sm"></i> Save changes</button>
+                    {{else}}
+                    <span class="btn btn-light btn-sm mr-2" style="margin-top: 20px;" title="You don't have enough permissions to edit it"><i class="mdi mdi-content-save-edit-outline icon-sm"></i> Save changes</span>
+                    {{end}}
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group row">
+                  <div class="col-sm-5">
+                  <h6>Vars of Group:
+                    <a href="/groups/vars" class="btn btn-inverse-warning tx-12 btn-sm btn-rounded mx-3">
+                    <i class="mdi mdi-pen-plus icon-sm ajax-file-upload-filenametext-primary"></i>Add Var</a>
+                  </h6>
+
+                    <div class="well-check">
+                      <div class="table-sorter-wrapper col-lg-12 table-responsive var-edit">
+                        {{$GVars := .InventoryGVars}}
+                        {{$editGVars := .EditGVars}}
+
+                        {{if $GVars}}
+                        <table class="table table-sm" style="width:100%">
+                          <tbody>
+                            {{range $GVar := $GVars}}
+                            <tr>
+                              <td class="text-left">
+                                <div class="form-check form-check-flat form-check-primary">
+                                  <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" name="gvars" value="{{$GVar.ID}} {{$GVar.Value}}"
+                                      {{range $editGVar := $editGVars}}
+                                        {{if eq $editGVar.ID $GVar.ID}} checked {{end}}
+                                      {{end}}><i class="input-helper"></i> {{$GVar.Name}}: <a href="/groups/var/{{$GVar.ID}}">{{$GVar.Value}}</a>
+                                  </label> 
+                                </div>
+                              </td>
+                            </tr>
+                            {{end}}
+                          </tbody>
+                        </table>
+                        {{else}}
+                          <p>There's nothing to see here... yet!</p>
+                        {{end}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      {{if .InventoryHosts}}
+      <div class="alert alert-warning notice" role="alert"><i class="mdi mdi-information-outline"></i>Attention! Group: <strong>{{.EditGroup.Value}}</strong> contains the following hosts.</div>
+      <div class="card" style="border: 0;">
+        <div class="card-body_">
+          <div class="table-sorter-wrapper col-lg-12 table-responsive">  
+                      
+            <table id="sortTable" class="table table-striped table-bordered table-hover" style="width:100%">
+              <thead class="thead-light">
+                <tr>
+                  <th class="sortStyle text-center" style="width: 30px;">Environment <i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle">Hostname<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center">IP<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center" style="width: 150px;">Created<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center" style="width: 150px;">Updated<i class="mdi mdi-chevron-down"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .InventoryHosts}}
+                <tr {{if not .Approved}} class="table-warning"{{end}}>
+                  <td class="text-center">
+                  {{if eq .Environment "prd"}}<span class="badge badge-prd">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "ppr"}}<span class="badge badge-ppr">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "edu"}}<span class="badge badge-edu">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "qa2"}}<span class="badge badge-qa2">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "qa"}}<span class="badge badge-qa">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "dev2"}}<span class="badge badge-dev2">{{.Environment }}</span>{{end}}
+                  {{if eq .Environment "dev"}}<span class="badge badge-dev">{{.Environment }}</span>{{end}}
+                  </td>
+                  <td><a href="/hosts/{{.ID}}" class="mb-0 text-primary">{{.Hostname}}</a></td>
+                  <td class="text-center"><label {{if .Status}}class="badge badge-success"{{end}} style="font-size: 14px;">{{.IP}}</label></td>
+                  <td>{{formatDate .Created}}</td>
+                  <td>{{formatDate .Updated}}</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+      {{end}}
+
+    </div>
+
+  </div> 
+</div>
+{{end}}

@@ -1,0 +1,179 @@
+{{template "main" .}}
+
+{{define "title"}}Host - {{.InventoryHost.Hostname}}{{end}}
+
+{{define "content"}}
+
+  <div class="content-wrapper">  
+
+      <div class="dashboard-header d-flex flex-column grid-margin">
+
+          <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+            <div class="d-flex align-items-center">
+              <h3 class="mb-0 font-weight-bold">
+                  <a href="/hosts"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> {{.InventoryHost.Hostname}}
+              </h3>
+
+              <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+                <i class="mdi mdi-chevron-right text-muted"></i>
+                <a class="text-muted mb-0 tx-13 cursor-pointer" href="/hosts">Hosts</a>
+              </div>
+            </div>
+
+            {{$role := .AuthenticatedUser.UserRole}}
+            <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+              {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                <a class="btn btn-warning btn-sm mr-3 d-none d-md-block" href="/hosts/edit/{{.InventoryHost.ID}}"><i class="mdi mdi-file-edit-outline icon-sm"></i> Edit host</a>
+              {{else}}
+                <span class="btn btn-light btn-sm mr-3 d-none d-md-block" title="You don't have enough permissions to edit it"><i class="mdi mdi-file-edit-outline icon-sm"></i> Edit host</span>
+              {{end}}
+
+              {{if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                {{if not .CountInvServices}}
+                <form action="/hosts/delete/{{.InventoryHost.ID}}" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                  <button type="submit" class="btn btn-outline-danger btn-sm mr-3 d-none d-md-block"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete host</button>
+                </form>
+                {{else}}
+                <span class="btn btn btn-outline-light btn-sm mr-3 d-none d-md-block" title="To delete a host you first need to delete its services"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete host</span>
+                {{end}}
+              {{else}}
+              <span class="btn btn btn-outline-light btn-sm mr-3 d-none d-md-block" title="You don't have enough permissions to delete it"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete host</span>
+              {{end}}
+            </div>
+
+          </div>
+
+          <div class="d-md-flex align-items-center justify-content-between flex-wrap">
+              <div class="d-flex mt-3 mt-lg-0">
+                  <div class="btn-group mt-3 mt-md-0" role="group" aria-label="Button group">
+                      <a class="btn btn-outline-secondary active">Properties</a>
+                      <a href="/services/host/{{.InventoryHost.Hostname}}" type="button" class="btn btn-outline-secondary">Services <span class="badge badge-secondary">{{.CountInvServices}}</span></a>
+                      <a type="button" class="btn btn-outline-secondary">History</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      {{with .Notice}}
+        <div class="alert alert-warning notice" role="alert">{{.}}</div>
+      {{end}}
+
+      <div class="row">
+          
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-paperclip text-primary"></i>General information</h4>
+                <p class="card-description">Basic information about the host</p>
+
+                {{with .InventoryHost}}
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th class="pl-0"></th>
+                      <th class="text-right"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="pl-0">Hostname:</td>
+                      <td class="pr-0 text-right font-weight-bold">{{.Hostname}}</td>
+                    </tr>
+                    <tr>
+                      <td class="pl-0">IP:</td>
+                      <td class="pr-0 text-right font-weight-bold">{{.IP}}</td>
+                    </tr>
+                    <tr>
+                      <td class="pl-0">Environment:</td>
+                      <td class="pr-0 text-right font-weight-bold">{{.Environment}}</td>   
+                    </tr>
+                    <tr>
+                      <td class="pl-0">Approved:</td>
+                      <td class="pr-0 text-right font-weight-bold">
+                        {{if .Approved}}
+                          <div class="badge badge-success ">Approved</div>
+                        {{else}}
+                          <div class="badge badge-warning"><a href="/approval">Awaiting approval</a></div>
+                        {{end}}
+                        <small>by Mostovoy Pavel</small>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                {{end}}
+
+                <p style="margin-top: 12px;">Groups:</p>
+                <div>
+                  <div id="tags_tagsinput" class="tagsinput" style="width: 100%; min-height: 75%; height: 75%;">
+                  {{range .InventoryGroups}}
+                    <span class="badge badge-primary"><a class="text-white" href="/group/{{.ID}}"><span>{{.Value}}</span></a></span>
+                  {{end}}
+                  </div>
+                </div>
+
+                <p style="margin-top: 20px;">Vars:</p>
+                <div>
+                  <div id="tags_tagsinput" class="tagsinput" style="width: 100%; min-height: 75%; height: 75%;">
+                    {{range .InventoryHVars}}
+                    <span class="badge badge-secondary"><a class="text-white" href="/hosts/var/{{.ID}}"><span>{{.Name}}: {{.Value}}</span></a></span>
+                    {{end}}
+                  </div>
+                </div>
+
+                <p style="margin-top: 20px;">Tags:</p>
+                <div>
+                  <div id="tags_tagsinput" class="tagsinput" style="width: 100%; min-height: 75%; height: 75%;">
+                    {{range .InventoryHTags}}
+                    <span class="badge badge-light"><a href="/hosts/tag/{{.ID}}"><span>{{.Value}}</span></a></span>
+                    {{end}}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          
+          {{with .InventoryHost}}
+          <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                  <div class="card-body">
+                      <h4 class="card-title"><i class="mdi mdi-paperclip text-primary"></i>More information</h4>
+                      <p class="card-description">Additional information about the host</p>
+
+                      <table class="table mb-0">
+                        <thead>
+                          <tr>
+                            <th class="pl-0"></th>
+                            <th class="text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="pl-0">Created:</td>
+                            <td class="pr-0 text-right font-weight-bold"><span class="badge badge-light">{{formatDate .Created}}</span></td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Updated:</td>
+                            <td class="pr-0 text-right font-weight-bold"><span class="badge badge-light">{{formatDate .Updated}}</span></td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Description:</td>
+                            <td class="pr-0 text-right">
+                              <div class="form-group">
+                                <textarea class="form-control" name="description" id="description" rows="4" spellcheck="true" style="background-color: #ffffff;" readonly>{{.Description.Value}}</textarea>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                  </div>
+              </div>
+          </div>
+          {{end}}
+      </div>
+      
+  </div>
+{{end}}

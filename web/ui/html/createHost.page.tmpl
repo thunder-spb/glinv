@@ -1,0 +1,212 @@
+{{template "main" .}}
+
+{{define "title"}}Create Host{{end}}
+
+{{define "content"}}
+
+<div class="content-wrapper">
+  
+  <div class="dashboard-header d-flex flex-column grid-margin">  
+    <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+      <div class="d-flex align-items-center">
+        <h3 class="mb-0 font-weight-bold"><a href="/hosts"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> Create Inventory Host</h3>
+
+        <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+          <i class="mdi mdi-chevron-right text-muted"></i>
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/hosts">Inventory Hosts</a>
+        </div>
+
+      </div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>  
+    </div>
+  </div>
+
+  {{$role := .AuthenticatedUser.UserRole}}
+  {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+
+  <form class="forms-sample_" action="/hosts/create" method="POST">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card" style="border: 0;">
+        <div class="row">
+
+          <div class="col-lg-3">
+            <div class="card-body">
+              <h4 class="card-title">Groups:
+                <a href="/groups/create?e={{.Environment}}" class="btn btn-inverse-success tx-12 btn-sm btn-rounded mx-3">
+                <i class="mdi mdi-pen-plus icon-sm ajax-file-upload-filenametext-primary"></i>Add Group</a>
+              </h4>
+
+              <p class="card-description">Inventory Groups</p>
+              <div class="well-check">
+                <div class="col-12 group-check">
+                  <ul class="tree">
+                    <div class="form-check all-check">
+                      <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" value="all" disabled checked>all</label>
+                    </div>
+                    {{ template "tree" .Tree }}
+                  </ul>  
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-9">
+            <div class="row">
+              <div class="col-lg-8">
+                <div class="card-body">
+
+                  <h4 class="card-title">Adding a new Host</h4>
+                  <p class="card-description">Please provide information about the host</p>
+
+                  <div class="form-group row">
+                    <div class="col-md-6" style="margin-bottom: -10px;">
+                      <label for="Environment"><strong>Environment:</strong>
+                        {{if eq .Environment "prd"}}<span class="badge badge-prd text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "ppr"}}<span class="badge badge-ppr text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "edu"}}<span class="badge badge-edu text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "qa2"}}<span class="badge badge-qa2 text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "qa"}}<span class="badge badge-qa text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "dev2"}}<span class="badge badge-dev2 text-size-17">{{.Environment}}</span>{{end}}
+                        {{if eq .Environment "dev"}}<span class="badge badge-dev text-size-17">{{.Environment}}</span>{{end}}
+                      </label>
+                        <input class="form-control" type="hidden" name="environment" id="environment" value="{{.Environment}}" placeholder="{{.Environment}}" readonly>
+                    </div>
+                  </div>
+                      
+                  <div class="form-group row">
+                    <div class="col-md-9">
+                      <label for="ServiceName"><strong>Host Name:*</strong></label>
+                      <input type="text" class="form-control" name="hostname" id="hostname" value="{{.Form.Get "hostname"}}" placeholder="Host Name">
+                      {{with .Form.Errors.Get "hostname"}}
+                        <small class="text-danger">{{.}}</small>
+                      {{end}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-3">
+                      <label><strong>IPv4:*</strong></label>
+                      <input class="form-control" name="ip" id="ip" value="{{.Form.Get "ip"}}" placeholder="IPv4">
+                      {{with .Form.Errors.Get "ip"}}
+                        <small class="text-danger">{{.}}</small>
+                      {{end}}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="Description"><strong>Description:</strong></label>
+                    <textarea class="form-control" name="description" id="description" rows="4"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary mr-2">Send to Approve</button>
+                  <a href="/hosts" class="btn btn-light">Cancel</a>
+
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="card-body">
+                  <h4 class="card-title">Host vars:
+                    <a href="/hosts/vars" class="btn btn-inverse-success tx-12 btn-sm btn-rounded mx-3">
+                    <i class="mdi mdi-pen-plus icon-sm ajax-file-upload-filenametext-primary"></i>Add Var</a>
+                  </h4>
+                  <p class="card-description">select the variable host</p>
+                  
+                    <div class="well-check">
+                      <div class="table-sorter-wrapper col-lg-12 table-responsive var-check"> 
+                          {{if .InventoryHVars}}
+                          <table class="table table-sm" style="width:100%">
+                            <tbody>
+                                {{range .InventoryHVars}}
+                                <tr>
+                                  <td class="text-left">
+                                    <div class="form-check form-check-flat form-check-primary">
+                                      <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" name="hvars" value="{{.ID}} {{.Value}}">
+                                        {{.Name}}: {{.Value}}
+                                      </label> 
+                                    </div>
+                                  </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                          </table>
+                          {{else}}
+                            <p>There's nothing to see here... yet!</p>
+                          {{end}}
+                      </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                  <h4 class="card-title">Host tags:
+                    <a href="/hosts/tags" class="btn btn-inverse-success tx-12 btn-sm btn-rounded mx-3">
+                    <i class="mdi mdi-pen-plus icon-sm ajax-file-upload-filenametext-primary"></i>Add Tag</a>
+                  </h4>
+                  <p class="card-description">select tags host</p>
+
+                  <div class="table-sorter-wrapper col-lg-12 table-responsive"> 
+                    {{if .InventoryHTags}}
+                      <table id="sortTableTags" class="table table-striped table-hover table-sm display" style="width:100%">
+                        <thead>
+                          <tr>
+                              <th></th> 
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {{range .InventoryHTags}}
+                          <tr>
+                            <td class="text-left">
+                              <div class="form-check form-check-flat form-check-primary">
+                                <label class="form-check-label">
+                                  <input type="checkbox" class="form-check-input" name="htags" value="{{.ID}} {{.Value}}">
+                                  {{.Value}}
+                                </label> 
+                              </div>
+                            </td>
+                          </tr>
+                          {{end}}
+                      </tbody>
+                    </table>
+                    {{else}}
+                      <p>There's nothing to see here... yet!</p>
+                    {{end}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+  {{else}}
+    <div class="alert alert-danger" role="alert">
+      You don't have enough authority. Contact the DevOps Department.
+    </div>
+  {{end}}
+
+</div>
+{{end}}
+
+{{define "tree"}}
+  {{if .}}
+    {{ range $key, $value := .Nodes }} 
+      <li>    
+        <div class="form-check tree-check">
+          <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="check_groups" value="{{ $value.ID }} {{ $value.Value }}">{{ $value.Value }}
+          </label>
+        </div>
+        <ul>
+          {{ template "tree" . }}
+        </ul> 
+      </li>
+    {{end}}
+  {{end}}
+{{end}}

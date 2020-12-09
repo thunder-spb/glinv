@@ -1,0 +1,190 @@
+{{template "main" .}}
+
+{{define "title"}}This section is under development{{end}}
+
+{{define "content"}}
+
+<style>
+   li {
+    list-style-type: none;
+   }
+
+    a:hover {
+        text-decoration: none;
+   }
+
+   .nav-link-help {
+    display: block;
+    padding: 0.25rem 0.25rem;
+    margin-left: 3rem;
+    
+
+}
+</style>
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+
+                <div class="card-body">
+                    <h1>Справочная информация по работе с GLINV</h1>
+                    <hr>
+                    <p class="card-description">Содержание:</p>
+                    <ul class="list-arrow mb-0">
+                        <li><a href="#roles">Роли</a></li>
+                        <li><a href="#inv">Inventory Ansible</a></li>
+                        <li><a href="#agent">Agent</a></li>
+                        <li><a href="#api">GLINV API</a></li>
+                        <li><a href="#conn-to-api">Подключение API в Ansible ролях</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <h3 id="roles">Роли</h3>
+                     <hr>
+                    <p>Текущую системную роль можно определить по цвету иконки пользователя в правом верхнем углу.</p>
+                    <p>В системе существуют следующие роли:</p>
+                        <ul>
+                            <li><i class="mdi mdi-account-circle mx-0 text-secondary icon-sm"></i><span class="text-secondary"> Read-Only</span> - ограниченный режим просмотра.</li>
+                            <li><i class="mdi mdi-account-circle mx-0 text-primary icon-sm"></i><span class="text-primary"> Оператор</span> - полномочия на внесение изменений.</li>
+                            <li><i class="mdi mdi-account-circle mx-0 text-success icon-sm"></i><span class="text-success"> Утверждающий</span> - утвержадющий изменения внесенные в систему.</li>
+                            <li><i class="mdi mdi-account-circle mx-0 text-danger icon-sm"></i><span class="text-danger"> Администратор</span> - полный набор полномочий.</li>
+                        </ul>
+                    <p> </p>
+                </div>
+                <div class="card-body">
+                    <h3 id="inv">Inventory Ansible</h3>
+                    <hr>
+                    <p>Данный раздел системы предназначен для представления, управления и последующего 
+                    формирования API системы функциональности Inventory Ansible.</p>
+                    <p>Существует возможность управления следующими категориями:</p>
+                    <ul class="nav flex-column sub-menu">
+                        <li> <a class="nav-link" href="/hosts"><i class="mdi mdi-hexagon-outline menu-icon"></i><strong class="text-secondary"> Hosts</strong>  - перечень всех хостов с поиском и фильтрами.</span></a> 
+                            <ul class="nav flex-column sub-menu" style="margin-top: -5px;">
+                                <li> <a class="nav-link-help" href="/hosts/create"><strong class="text-secondary">Create Host</strong> - добавление нового хоста в систему.</a></li>
+                                <li> <a class="nav-link-help" href="/hosts/hvars"><strong class="text-secondary">Vars of Hosts</strong> - управление переменными хостов.</a></li>
+                            </ul>
+                        </li>
+                        <li> <a class="nav-link" href="/groups"><i class="mdi mdi-hexagon-multiple-outline menu-icon"></i><strong class="text-secondary"> Groups</strong> - перечень всех групп с переменными групп.</a>
+                            <ul class="nav flex-column sub-menu" style="margin-top: -5px;">
+                                <li> <a class="nav-link-help" href="/groups/create"><strong class="text-secondary">Create Group</strong> - добавление новой группы в систему.</a></li>
+                                <li> <a class="nav-link-help" href="/groups/gvars"><strong class="text-secondary">Vars of Groupss</strong> - управление переменными групп.</a></li>
+                            </ul>
+                        </li>
+
+                        <li> <a class="nav-link" href="/services"><i class="mdi mdi-hexagon-slice-2 menu-icon"></i><strong class="text-secondary"> Services (Env)</strong> - перечень всех сервисов/модулей.</a>
+                            <ul class="nav flex-column sub-menu" style="margin-top: -5px;">
+                                <li> <a class="nav-link-help" href="/services/create"><strong class="text-secondary">Create Service</strong> - добавление нового сервиса/модуля в систему.</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br />
+                    <p>Последовательность внесения данных в систему:</p>
+                    <div class="row">
+                    <div class="col-md-3 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">1. Переменные</h4>
+                        <div class="media">
+                            <i class="mdi mdi-shape-plus text-info d-flex align-self-start mr-3 icon-md"></i>
+                            <div class="media-body">
+                            <p class="card-text">Сначала требуется проверить необходимые переменные для хостов и групп, при необходимости создать новые.</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-md-3 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">2. Группы</h4>
+                        <div class="media">
+                            <i class="mdi mdi-hexagon-multiple-outline text-info d-flex align-self-start mr-3 icon-md"></i>
+                            <div class="media-body">
+                            <p class="card-text">Проверить группы, при необходимости добавить новые группы связав с существующими или новыми переменными.</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-md-3 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">3. Хосты</h4>
+                        <div class="media">
+                            <i class="mdi mdi-hexagon-outline text-info d-flex align-self-start mr-3 icon-md"></i>
+                            <div class="media-body">
+                            <p class="card-text">Проверить хосты, при необходимости добавить новый хост связав с группой и переменными.</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-md-3 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">4. Сервисы/Модули</h4>
+                        <div class="media">
+                            <i class="mdi mdi-hexagon-slice-2 text-info d-flex align-self-start mr-3 icon-md"></i>
+                            <div class="media-body">
+                            <p class="card-text">Добавить новый сервис связав с требуемым хостом.</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+
+
+                </div>
+                <div class="card-body">
+                    <h3 id="agent">Agent</h3>
+                    <hr>
+                    <p>Исполняемый файл агента размещен и доступен для загрузки по ссылке: <a href="/devops/glinv/agent/blob/master/build/glinv-agent">glinv-agent</a></p>
+                    <p> </p>
+                </div>
+                <div class="card-body">
+                    <h3 id="api">GLINV API</h3>
+                    <hr>
+                    <p>API системы доступно по адресу: <a href="#"><strong>#</strong></a>. Получение ответа на запрос возможно как формате YAML по умолчанию, так и в формате JSON.</p>
+                    <p>Примеры запросов в формате <mark class="bg-warning text-white">YAML</mark>: (TODO: Swagger)</p>
+                    <ul>
+                        <li>/hosts- получить все хосты в группе all</li>
+                        <li>/hosts/{env}- получить все хосты в группе {среды окружения}</li>
+                        <br />
+                        <li>/groups- получить все группы</li>
+                        <li>/groups/{env}- получить все группы {среды окружения}</li>
+                        <br />
+                        <li>/services- получить все хосты в группе all</li>
+                        <li>/services/{env}- получить все сервисы в группе {среда окружения}</li>
+
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                <h3 id="conn-to-api" >Подключение API в Ansible ролях</h3>
+                <hr>
+                <p>Пример: TODO: Auth</p>
+                <p><pre><code>
+---
+# Init
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Download inventory.yml from GLINV
+      get_url:
+        url: http://#/hosts/dev2
+        dest: /environments/inventory.yml
+    - meta: refresh_inventory
+                </code></pre></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

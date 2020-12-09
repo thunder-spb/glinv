@@ -1,0 +1,157 @@
+{{template "main" .}}
+
+{{define "title"}}Manifests{{end}}
+
+{{define "content"}}
+<div class="content-wrapper">  
+    <div class="dashboard-header d-flex flex-column grid-margin">
+        <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+            
+            <div class="d-flex align-items-center">
+                <h3 class="mb-0 font-weight-bold">Manifests</h3>
+                <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                    <p class="text-muted mb-0 tx-13 cursor-pointer"></p>
+                </div>
+
+                <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                    <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+                </div>
+
+            </div>
+            <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+
+            <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+                <!-- <button class="btn btn-primary btn-sm mr-3 d-none d-md-block"><a><i class="mdi mdi-pencil-plus icon-sm"></i> Add host</a></button> -->
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+<div class="col-md-12 col-xl-12 grid-margin stretch-card d-none d-md-flex">
+              <div class="card" style="border: 0px;">
+                <div class="card-body">
+                  <h4 class="card-title">General Templates</h4>
+                  <p class="card-description">Version 1 by Mostovoy Pavel 11.07.2020
+                  </p>
+                  <div class="row">
+                    <div class="col-1">
+                      <ul class="nav nav-tabs nav-tabs-vertical" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="home-tab-vertical" data-toggle="tab" href="#meta" role="tab" aria-controls="meta" aria-selected="true">
+                          meta
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#deploy" role="tab" aria-controls="deploy" aria-selected="false">
+                          deploy
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#bootstrap" role="tab" aria-controls="bootstrap" aria-selected="false">
+                          bootstrap
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#supervisord" role="tab" aria-controls="supervisord" aria-selected="false">
+                          supervisord
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#systemd" role="tab" aria-controls="systemd" aria-selected="false">
+                          systemd
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#jmx_exporter" role="tab" aria-controls="jmx_exporter" aria-selected="false">
+                          jmx_exporter
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#consul" role="tab" aria-controls="consul" aria-selected="false">
+                          consul
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#vault" role="tab" aria-controls="vault" aria-selected="false">
+                          vault
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#pinpoint_agent" role="tab" aria-controls="pinpoint_agent" aria-selected="false">
+                          pinpoint_agent
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="contact-tab-vertical" data-toggle="tab" href="#configuration" role="tab" aria-controls="configuration" aria-selected="false">
+                          configuration
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-11">
+                    <form class="forms-sample">
+                    <div class="form-group">
+                      <div class="tab-content tab-content-vertical">
+                        <div class="tab-pane fade active show" id="meta" role="tabpanel" aria-labelledby="home-tab-vertical">               
+<div id="editor-meta"><textarea style="width:100%;">config_format: properties
+platform: springboot
+server.port: 8096
+app_port: 8096   
+health_check: true
+jmx-agent: false
+command_args:
+  - -Xms128M
+  - -Xmx512M
+  - -Dsun.jnu.encoding=UTF-8
+  - -Dfile.encoding=UTF-8
+  - -Dcom.sun.management.jmxremote
+  - -Dcom.sun.management.jmxremote.ssl=false
+  - -Dcom.sun.management.jmxremote.authenticate=false
+  - -Dcom.sun.management.jmxremote.port=8296
+  - "-Djava.rmi.server.hostname=/{/{ ansible_host /}/}"
+  - "-Dspring.profiles.active=/{/{ ansible_global_environment /}/}"</textarea>
+</div>
+                        </div>
+
+                        <div class="tab-pane fade show" id="deploy" role="tabpanel" aria-labelledby="home-tab-vertical">                   
+<div id="editor-deploy"><textarea style="width:100%;">deploy_to: /var/opt/TEST/app
+method: maven
+maven:
+  repo: https://#/repository/
+  group_id: #
+owner: #
+group: #
+shared_dirs:
+  - logs
+config_files:
+  - config/application.properties</textarea>
+</div>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Save</button>
+                    <button class="btn btn-light">Cancel</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    </div>
+</div>
+
+<script src="/static/vendors/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor_meta = ace.edit("editor-meta");
+    editor_meta.setTheme("ace/theme/tomorrow");
+    editor_meta.session.setMode("ace/mode/yaml");
+
+    var editor_deploy = ace.edit("editor-deploy");
+    editor_deploy.setTheme("ace/theme/tomorrow");
+    editor_deploy.session.setMode("ace/mode/yaml");
+
+</script>
+
+{{end}}

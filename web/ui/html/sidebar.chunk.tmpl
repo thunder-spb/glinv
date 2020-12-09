@@ -1,0 +1,115 @@
+{{define "sidebar"}}
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+
+        <li class="nav-item">
+        <a class="nav-link" href="/">
+            <i class="mdi mdi-eye-check menu-icon"></i>
+            <span class="menu-title">Overview</span>
+        </a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#inventory" aria-expanded="false"
+            aria-controls="inventory">
+            <i class="mdi mdi-hexagon menu-icon"></i>
+            <span class="menu-title">Inventory</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="inventory">
+            <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/groups"><i class="mdi mdi-hexagon-multiple-outline menu-icon"></i> Groups</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/hosts"><i class="mdi mdi-hexagon-outline menu-icon"></i> Hosts</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/services"><i class="mdi mdi-hexagon-slice-2 menu-icon"></i>  Services/Modules</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/manifests"><i class="mdi mdi-hexagon-slice-6 menu-icon"></i>  Manifests</a></li>
+            </ul>
+        </div>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#servers" aria-expanded="false" aria-controls="network">
+            <i class="mdi mdi-package menu-icon"></i>
+            <span class="menu-title">Hard & Soft</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="servers">
+            <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/servers"><i class="mdi mdi-server menu-icon"></i> Servers</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/base"><i class="mdi mdi-layers-outline menu-icon"></i> Base Templates</a></li> 
+            </ul>
+        </div>
+        </li>
+
+
+        <li class="nav-item">
+        <a class="nav-link" href="/locations">
+            <i class="mdi mdi-map-marker-multiple-outline menu-icon"></i>
+            <span class="menu-title">Locations</span>
+        </a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" href="/applications">
+            <i class="mdi mdi-application menu-icon"></i>
+            <span class="menu-title">Applications</span>
+        </a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#network" aria-expanded="false" aria-controls="network">
+            <i class="mdi mdi-network-router menu-icon"></i>
+            <span class="menu-title">Network</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="network">
+            <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/devices"> Devices </a></li>
+            </ul>
+        </div>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#contacts" aria-expanded="false" aria-controls="contacts">
+            <i class="mdi mdi-account-group menu-icon"></i>
+            <span class="menu-title">Contacts</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="contacts">
+            <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/teams"> Teams </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/users"> Users </a></li>
+            </ul>
+        </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/documents">
+                <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+                <span class="menu-title">Documents</span>
+            </a>
+        </li> <br />
+
+        <li class="nav-item">
+            <a class="nav-link" href="/history">
+                <i class="mdi mdi-history menu-icon"></i>
+                <span class="menu-title">History</span>
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link" href="/reports">
+                <i class="mdi mdi-chart-bar menu-icon"></i>
+                <span class="menu-title">Reports</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/administration">
+                <i class="mdi mdi-wrench menu-icon"></i>
+                <span class="menu-title">Administration</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>
+{{end}}

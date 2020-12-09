@@ -1,0 +1,201 @@
+{{template "main" .}}
+
+{{define "title"}}Service{{end}}
+
+{{define "content"}}
+  <div class="content-wrapper">  
+
+      <div class="dashboard-header d-flex flex-column grid-margin">
+
+          <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+
+              <div class="d-flex align-items-center">
+                <h3 class="mb-0 font-weight-bold">
+                    <a href="/services"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> {{.InventoryService.Value}}
+                </h3>
+
+                <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                  <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+                  <i class="mdi mdi-chevron-right text-muted"></i>
+                  <a class="text-muted mb-0 tx-13 cursor-pointer" href="/services">Services</a>
+                </div>
+              </div>
+
+              <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+                {{$role := .AuthenticatedUser.UserRole}}
+                {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                  <a class="btn btn-warning btn-sm mr-3 d-none d-md-block" href="/services/edit/{{.InventoryService.ID}}"><i class="mdi mdi-file-edit-outline icon-sm"></i> Edit service</a>
+                {{else}}
+                  <span class="btn btn-light btn-sm mr-3 d-none d-md-block" title="You don't have enough permissions to edit it"><i class="mdi mdi-file-edit-outline icon-sm"></i> Edit service</span>
+                {{end}}
+
+
+                {{if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                <form class=""action="/services/delete/{{.InventoryService.ID}}" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                  <button type="submit" class="btn btn-outline-danger btn-sm icon-btn"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete service</button>
+                </form>
+                {{else}}
+                <span class="btn btn-outline-light btn-sm icon-btn" title="You don't have enough permissions to delete it"><i class="mdi mdi-trash-can-outline icon-sm"></i> Delete service</span>
+                {{end}}
+              </div>
+          </div>
+          <div class="d-md-flex align-items-center justify-content-between flex-wrap">
+            <div class="d-flex mt-3 mt-lg-0">
+                <div class="btn-group mt-3 mt-md-0" role="group" aria-label="Button group">
+                    <a class="btn btn-outline-secondary active">Properties</a>
+                    <a type="button" class="btn btn-outline-secondary">Documents <span class="badge badge-secondary">0</span></a>
+                    <a type="button" class="btn btn-outline-secondary">History <span class="badge badge-secondary">0</span></a>
+                </div>
+            </div>
+          </div>
+      </div>
+
+      {{with .Notice}}
+        {{.}}
+      {{end}}
+      
+
+      {{with .InventoryService}}
+      <div class="row">
+
+          <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                  <div class="card-body">
+
+                      <h4 class="card-title"><i class="mdi mdi-paperclip text-primary"></i>General information</h4>
+                      <p class="card-description">Basic information about the service</p>
+
+                      <table class="table mb-0">
+                        <thead>
+                          <tr>
+                            <th class="pl-0"></th>
+                            <th class="text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="pl-0">Location:</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Location}}</td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Type</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Type}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Title</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Title}}</td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Technical name</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.TechName}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">External entrypoint (Domain)</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Domain}}</td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Internal entrypoint</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Value}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Placement</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Placement}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Team</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Team}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Responsible employee</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Resp}}</td>
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Port</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.Port}}</td>   
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Consul</td>
+                            <td class="pr-0 text-right font-weight-bold">
+                              Register:
+                              {{if .RegToConsul}}
+                                <label class="badge badge-success">yes</label>
+                              {{else}}
+                                <label class="badge badge-danger">no</label>
+                              {{end}}
+
+                              Check:
+                              {{if .StatusInConsul}}
+                                <label class="badge badge-success">ok</label>
+                              {{else}}
+                                <label class="badge badge-danger">not found</label>
+                              {{end}}
+                            </td>   
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Method Check</td>
+                            <td class="pr-0 text-right font-weight-bold">{{.MethodCheckConsul}}</td>   
+                          </tr>
+
+                          <tr>
+                            <td class="pl-0">Approval</td>
+                            <td class="pr-0 text-right font-weight-bold">
+                              {{if .Approved}}
+                                <div class="badge badge-success">Approved</div>
+                              {{else}}
+                                <div class="badge badge-warning"><a href="/approval">Awaiting approval</a></div>
+                              {{end}}
+                              <small>by Mostovoy Pavel</small>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                  <div class="card-body">
+                      <h4 class="card-title"><i class="mdi mdi-paperclip text-primary"></i>More information</h4>
+                      <p class="card-description">Additional information about the service</p>
+
+                      <table class="table mb-0">
+                        <thead>
+                          <tr>
+                            <th class="pl-0"></th>
+                            <th class="text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="pl-0">Created</td>
+                            <td class="pr-0 text-right font-weight-bold">{{formatDate .Created}}</td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Updated</td>
+                            <td class="pr-0 text-right font-weight-bold">{{formatDate .Updated}}</td>
+                          </tr>
+                          <tr>
+                            <td class="pl-0">Description</td>
+                            <td class="pr-0 text-right">{{.Description.Value}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+      {{end}}
+  </div>
+{{end}}

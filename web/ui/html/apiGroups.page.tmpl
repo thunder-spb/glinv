@@ -1,0 +1,29 @@
+{{template "main" .}}
+
+{{define "title"}}This section is under development{{end}}
+
+{{define "content"}}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-5">
+                            <h2>API for<u class="ml-2">Groups</u></h2>
+                        </div>
+                        <div class="col-12 results">
+                            <div class="pt-4 border-bottom">
+                            <p class="d-block h4">Method "GET"</p>
+                            <p>groups/{environment} - (prd, ppr, edu, qa2, qa, dev2, dev)</p>
+                            <p class="page-description mt-1 w-75 text-muted">For example:</p>
+                            <a class="page-url text-primary" href="/groups/dev" target="_blank">/groups/dev</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

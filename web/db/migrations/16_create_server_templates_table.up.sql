@@ -1,0 +1,12 @@
+CREATE TABLE server_templates (
+	id SERIAL NOT NULL PRIMARY KEY,
+	type VARCHAR (255),
+	value VARCHAR (255),
+	created TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	updated TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON server_templates
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

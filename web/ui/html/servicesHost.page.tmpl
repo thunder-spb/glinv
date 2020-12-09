@@ -1,0 +1,101 @@
+{{template "main" .}}
+
+{{define "title"}}Inventory Services of Host{{end}}
+
+{{define "content"}}
+<div class="content-wrapper">  
+
+  <div class="dashboard-header d-flex flex-column grid-margin">
+    <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+      <div class="d-flex align-items-center">
+        <h3 class="mb-0 font-weight-bold"><i class="mdi mdi-hexagon-slice-2 icon-md text-info"></i> Services of Host: {{.Hostname}}</h3>
+        <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+          <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+        </div>
+      </div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+      <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+          {{$role := .AuthenticatedUser.UserRole}}
+          {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+          <a href="/services/create" class="btn btn-primary btn-sm mr-3 d-none d-md-block text-white">
+            <i class="mdi mdi-pencil-plus icon-sm"></i> Create Service
+          </a>
+          {{else}}
+          <span class="btn btn-light btn-sm mr-3 d-none d-md-block text-white">
+            <i class="mdi mdi-pencil-plus icon-sm"></i> Create Service
+          </span>
+          {{end}}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-xl-12 grid-margin stretch-card">
+      <div class="card" style="border: 0px;">
+        <div class="card-body_">
+
+
+
+          <div class="table-sorter-wrapper col-lg-12 table-responsive">
+            {{if .InventoryServices}}
+            <!-- <table id="sortable-table-1" class="table table-bordered table-hover"> -->
+            <table id="sortTable" class="table table-striped table-bordered table-hover table-sm_ display" style="width:100%">
+              <thead class="thead-light">
+                <tr>
+                  <!--<th>#</th> -->
+                  <th class="sortStyle text-center">Environment<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle">Node<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center">IP<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle">Service<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle">Value<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center">Port<i class="mdi mdi-chevron-down"></i></th>
+                  <th class="sortStyle text-center">Consul<i class="mdi mdi-chevron-down"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .InventoryServices}}
+                <tr {{if not .Approved}} class="table-warning"{{end}}>
+                  <!-- <td>{{.ID}}</td> -->
+                  <td class="text-center" style="width: 30px;">
+                  {{if eq .Host.Environment "prd"}}<span class="badge badge-prd">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "ppr"}}<span class="badge badge-ppr">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "edu"}}<span class="badge badge-edu">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "qa2"}}<span class="badge badge-qa2">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "qa"}}<span class="badge badge-qa">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "dev2"}}<span class="badge badge-dev2">{{.Host.Environment }}</span>{{end}}
+                  {{if eq .Host.Environment "dev"}}<span class="badge badge-dev">{{.Host.Environment }}</span>{{end}}
+                  </td>
+                  <td>{{ .Host.Hostname }}</td>
+                  <td class="text-center">{{ .Host.IP }}</td>
+                  <td><a href='/services/{{.ID}}'>{{.Title}}</a></td>
+                  <td>{{.Value}}</td>
+                  <td class="text-center">{{.Port}}</td>
+                  <td class="text-center">
+                  {{if .StatusInConsul}}
+                    <label class="badge badge-success">
+                      <a class="text-white" target="_blank" href="http://consul.#:8500/ui/atlas-nsk/services/{{.Title}}">
+                        ok
+                      </a>
+                    </label>
+                  {{else}}
+                    <label class="badge badge-danger">
+                      <a class="text-white" target="_blank" href="http://consul.#:8500/ui/atlas-nsk/services/{{.Title}}">
+                        not found
+                      </a>
+                    </label>
+                  {{end}}
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+            {{else}}
+                <p>There's nothing to see here... yet!</p>
+            {{end}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

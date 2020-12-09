@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>FWD</title>
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/static/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" type="text/css" href="/static/vendors/jquery-tags-input/jquery.tagsinput.min.css">
+
+  <!-- sort-->
+  <link rel="stylesheet" type="text/css" href="/static/vendors/css/dataTables.bootstrap4.min.css"/>
+
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+
+  <link rel="shortcut icon" href="/static/img/favicon.png" />
+</head>
+
+<body class="sidebar-icon-only">
+  <div class="container-scroller">
+
+    <!-- chunk:chunks/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center">
+          <a class="navbar-brand brand-logo" href="/" style="font-size: 24px;"> <i class="mdi mdi-database-check icon-md"></i> GLINV</a>
+          <a class="navbar-brand brand-logo-mini" href="/"><i class="mdi mdi-database-check icon-md"></i></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+          </button>
+
+          <ul class="navbar-nav mr-lg-2">
+              <li class="nav-item nav-search d-none d-lg-block">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text" id="search">
+                              <i class="mdi mdi-magnify"></i>
+                          </span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="Search... (not enabled)" aria-label="search"
+                      aria-describedby="search">
+                  </div>
+                  
+              </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+
+                  <li class="nav-item dropdown">
+                      <span class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center">
+                          <i class="mdi mdi-bell-outline text-secondary mx-0"></i>
+                          <div class="badge badge-pill badge-secondary alert-approve">{{.CountUnapproved}}</div>
+                      </span>
+                  </li>
+
+
+              <li class="nav-item nav-profile dropdown">
+                  <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
+                      id="notificationDropdown" href="#" data-toggle="dropdown"><i class="mdi mdi-account-circle mx-0 text-secondary"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                      <a class="dropdown-item">
+                      <i class="mdi mdi-settings "></i>
+                      anonym
+                      </a>
+                  </div>
+              </li>
+              <li class="nav-item nav-settings d-none d-lg-flex">
+                  <a class="nav-link" href="/help">
+                      <i class="mdi mdi-help-circle-outline text-primary"></i>
+                  </a>
+              </li>
+              <li class="nav-item nav-settings d-none d-lg-flex">
+                  <a class="nav-link" href="#">
+                      <i class="mdi mdi-dots-horizontal"></i>
+                  </a>
+              </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+              data-toggle="offcanvas">
+              <span class="mdi mdi-menu"></span>
+          </button>
+      </div>
+    </nav>
+    <!-- chunk -->
+
+    <div class="container-fluid page-body-wrapper">
+
+      <!-- chunk:chunks/_sidebar.html -->
+      {{template "sidebar" .}}
+      <!-- chunk -->
+
+      <div class="main-panel">
+
+        <div class="content-wrapper">  
+
+          <div class="dashboard-header d-flex flex-column grid-margin">
+            <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-center">
+                <h3 class="mb-0 font-weight-bold"><i class="mdi mdi-gamepad-variant icon-md text-info"></i> PortFWD+DNS+Services</h3>
+                <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                  <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+                </div>
+              </div>
+              <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-xl-12 grid-margin stretch-card">
+              <div class="card" style="border: 0px;">
+                <div class="card-body_">
+
+                  <div class="d-md-flex align-items-center justify-content-between flex-wrap">
+                    <div class="d-flex mt-3 mt-lg-0">
+                      <a href="/fwd" class="btn btn-outline-secondary">ALL</a>
+                      <a href="/fwd?env=prd" class="btn btn-prd">PRD</a>
+                      <a href="/fwd?env=ppr" class="btn btn-ppr">PPR</a>
+                      <a href="/fwd?env=edu" class="btn btn-edu">EDU</a>
+                      <a href="/fwd?env=qa2" class="btn btn-qa2">QA2</a>
+                      <a href="/fwd?env=qa" class="btn btn-qa">QA</a>
+                      <a href="/fwd?env=dev2" class="btn btn-dev2">DEV2</a>
+                      <a href="/fwd?env=dev" class="btn btn-dev">DEV</a>
+                    </div>
+                  </div>
+
+                  <div class="table-sorter-wrapper col-lg-12 table-responsive">
+                    {{if .Stages}}
+                    <!-- <table id="sortable-table-1" class="table table-bordered table-hover"> -->
+                    <table id="sortTable" class="table table-striped table-bordered table-hover table-sm_ display" style="width:100%">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Env</th>
+                          <th>Type</th>
+                          <th>Technical name<i class="mdi mdi-chevron-down"></i></th>
+                          <th>Domain name<i class="mdi mdi-chevron-down"></i></th>
+                          <th>IP<i class="mdi mdi-chevron-down"></i></th>
+                          <th>Internal entrypoint<i class="mdi mdi-chevron-down"></i></th>
+                          <th>Placement<i class="mdi mdi-chevron-down"></i></th>
+                          <th>Team<i class="mdi mdi-chevron-down"></i></th>
+                          <th>Responsible<i class="mdi mdi-chevron-down"></i></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{range .Stages}}
+                        <tr {{if not .Approved}} class="table-warning"{{end}} {{if .Delete}} class="table-danger"{{end}}>
+                          <td>
+                            {{if eq .Host.Environment "prd"}}<span class="badge badge-prd">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "ppr"}}<span class="badge badge-ppr">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "edu"}}<span class="badge badge-edu">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "qa2"}}<span class="badge badge-qa2">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "qa"}}<span class="badge badge-qa">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "dev2"}}<span class="badge badge-dev2">{{.Host.Environment }}</span>{{end}}
+                            {{if eq .Host.Environment "dev"}}<span class="badge badge-dev">{{.Host.Environment }}</span>{{end}}
+                          </td>
+                          <td>{{.Type}}</td>
+                          <td><a href='/services/{{.ID}}' title="{{.Title}}">{{.TechName}}</a></td>
+                          <td><a href="http://{{.Domain}}">{{.Domain}}</a></td>
+                          <td><a href="http://{{.Host.IP}}:{{.Port}}">{{.Host.IP}}:{{.Port}}</a></td>
+                          <td><a href="http://{{.Value}}:{{.Port}}">{{.Value}}{{if .Value}}:{{.Port}}{{end}}</a></td>
+                          <td>{{.Placement}}</td>
+                          <td>{{.Team}}</td>
+                          <td>{{.Resp}}</td>
+                        </tr>
+                        {{end}}
+                      </tbody>
+                    </table>
+                    {{else}}
+                        <p>There's nothing to see here... yet!</p>
+                    {{end}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+
+        <!-- chunk:chunks/_footer.html -->
+        {{template "footer" .}}
+        <!-- chunk -->
+        
+      </div>
+      <!-- main-panel ends -->
+
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="/static/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="/static/vendors/jquery.flot/jquery.flot.js"></script>
+  <script src="/static/vendors/jquery.flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/jquery.flot/jquery.flot.resize.js"></script>
+  <script src="/static/vendors/peity/jquery.peity.min.js"></script>
+  <script src="/static/js/jquery.flot.dashes.js"></script>
+  <script src="/static/vendors/jquery-tags-input/jquery.tagsinput.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="/static/js/off-canvas.js"></script>
+  <script src="/static/js/hoverable-collapse.js"></script>
+  <script src="/static/js/template.js"></script>
+  <script src="/static/js/settings.js"></script>
+  <script src="/static/js/todolist.js"></script>
+  <!-- endinject -->
+
+  <!-- Custom js for this page-->
+  <script src="/static/js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+
+  <!-- sort -->
+  <script type="text/javascript" src="/static/vendors/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('#sortTable').DataTable( {
+            "scrollY": '56vh',
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHosts').DataTable( {
+            "scrollY": '60vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHostApprove').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableHostDelete').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableService').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+    <script>
+    $(document).ready(function() {
+        $('#sortTableTags').DataTable( {
+            "scrollY": '15vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableSysctl').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTablePkg').DataTable( {
+            "scrollY": '30vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true
+        } );
+    } );
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        $('#sortTableTpl').DataTable( {
+            "scrollY": '40vh',
+            "scrollCollapse": true,
+            "paging":   false,
+            "info":     true,
+            "order": [[ 1, "asc" ]]
+        } );
+    } );
+  </script>
+
+  <script>
+    window.onload = function () {
+      document.body.classList.add('loaded');
+    }
+  </script>
+
+</body>
+</html>

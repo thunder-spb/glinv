@@ -1,0 +1,134 @@
+{{template "main" .}}
+{{define "title"}}Base template {{.BaseTemplate.Type}} {{end}}
+{{define "content"}}
+<div class="content-wrapper">
+    <div class="dashboard-header d-flex flex-column grid-margin-">
+        <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+            <div class="d-flex align-items-center">
+                <h3 class="mb-0">
+                    <a href="/base"><i class="mdi mdi-keyboard-backspace text-primary icon-sm"></i></a> 
+                    base template {{.BaseTemplate.Type}}: <span class="text-info">{{.BaseTemplate.Value}}</span>
+                </h3>
+                <div class="d-none d-md-flex" style="padding: 5px 0px 0px 20px;">
+                    <a class="text-muted mb-0 tx-13 cursor-pointer" href="/">Overviwew</a>
+                    <i class="mdi mdi-chevron-right text-muted"></i>
+                    <a class="text-muted mb-0 tx-13 cursor-pointer" href="/base">Base Templates</a>
+                </div>
+            </div>
+            <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0"></div>
+        </div>
+    </div>
+
+    {{with .Notice}}
+        <div class="alert alert-success notice" role="alert">{{.}}</div>
+    {{end}}
+
+    <div class="row">
+        {{$role := .AuthenticatedUser.UserRole}}
+        {{ if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+        <div class="col-12 grid-margin">
+            <div class="card" style="border: 0;">
+                <div class="card-body">
+                    <p class="card-description">edit name of base template</p>
+                    
+                    <form class="form-inline repeater"action="/base/{{.BaseTemplate.Type}}/edit/{{.BaseTemplate.ID}}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                        <div data-repeater-list="group-a">
+                            <div data-repeater-item="" class="d-flex mb-2">
+                                <div class="input-group mr-sm-2 mb-sm-0">
+                                    <input type="hidden" name="idTpl" value="{{.BaseTemplate.ID}}">
+                                    <input type="hidden" name="typeTpl" value="{{.BaseTemplate.Type}}">
+                                    <input type="text" class="form-control" name="valueTpl" value="{{.BaseTemplate.Value}}">
+                                </div>            
+                                {{if or (eq $role "1") (eq $role "2") (eq $role "3")}}
+                                <button type="submit" class="btn btn-primary btn-sm"><i class="mdi mdi-content-save-edit-outline icon-sm"></i> Save changes</button>
+                                {{else}}
+                                <span class="btn btn-light btn-sm"><i class="mdi mdi-content-save-edit-outline icon-sm"></i> Save changes</span>
+                                {{end}}
+                            </div>
+                        </div>
+                    </form>
+
+                    {{with .Form.Errors.Get "valueTpl"}}
+                    <small class="text-danger ml-3 mb-1">{{.}}</small>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Add parameter</h4>
+                    <form class="forms-sample" action="/base/{{.BaseTemplate.Type}}/{{.BaseTemplate.ID}}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <input type="hidden" name="type" value="{{.BaseTemplate.Type}}">
+                    <p class="card-description">before adding a you must first check its existence</p>
+                        <div class="row">
+                            <div data-repeater-list="group-a">
+                                <div data-repeater-item="" class="d-flex mb-2">
+                                    <div class="form-group col-md-10 mr-sm-2 mb-sm-0">
+                                        <input type="text" class="form-control" name="title" id="title" value="{{.Form.Get "title"}}" placeholder="Title">
+                                        {{with .Form.Errors.Get "title"}}
+                                            <small class="text-danger">{{.}}</small>
+                                        {{end}}
+                                    </div>
+                                    <div class="form-group col-md-10 mr-sm-2 mb-sm-0">
+                                        <input type="text" class="form-control" name="value" id="value" value="{{.Form.Get "value"}}" placeholder="Value">
+                                        {{with .Form.Errors.Get "value"}}
+                                            <small class="text-danger">{{.}}</small>
+                                        {{end}}
+                                    </div>
+                                    <div class="form-group col-md-10 mr-sm-2 mb-sm-0">
+                                    <button type="submit" class="btn btn-primary btn-sm mr-3 d-none d-md-block text-white col-md-3" name="id" value="{{.BaseTemplate.ID}}">
+                                        <i class="mdi mdi-pencil-plus icon-sm"></i> Add
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        
+        <div class="col-md-12 col-xl-12 grid-margin stretch-card-">
+            <div class="card" style="border: 0;">
+                <div class="card-body">
+                    <p class="card-description">parameters</p>
+                    <div class="table-sorter-wrapper col-lg-12 table-responsive">
+                        {{$type := .BaseTemplate.Type}}
+                        {{$items := .BaseTemplatesItem}}
+                        {{if $items}}
+                        <table id="sortTable" class="table table-striped table-bordered table-hover" style="width:100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:180px">Title<i class="mdi mdi-chevron-down"></i></th>
+                                    <th class="sortStyle">Value<i class="mdi mdi-chevron-down"></i></th>
+                                    <th style="width:10px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $key, $item := $items }}
+                                <tr>
+                                    <td>{{$item.Title}}</td>
+                                    <td>{{$item.Value}}</td>
+                                    <td class="text-center">
+                                        <a href="/base/{{$type}}/{{$item.IDTpl}}/delete/item/{{$item.ID}}" name="id" value="{{$item.ID}}" title="Delete"><i class="mdi mdi-close icon-sm text-danger"></i></a>
+                                    </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                        </table>
+                        {{else}}
+                            <p>There's nothing to see here... yet!</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div> 
+
+</div>
+{{end}}
